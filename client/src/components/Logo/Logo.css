@@ -1,0 +1,10 @@
+.logostyle {
+     margin-left: 40px;
+     background-image: linear-gradient(to right bottom, var(--color-primary-light),  var(--color-primary-dark));
+}
+
+.log{
+     
+     display: flex;
+     justify-content: flex-start;
+}

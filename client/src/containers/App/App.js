@@ -45,7 +45,7 @@ class App extends Component {
     });
   }
 
-  render() {
+  render() {s
     return (
       <div className="App">
         <Particles className="particles" params={particlesOptions} />

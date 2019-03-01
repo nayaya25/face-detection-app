@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require('cors');
 const Knex = require('knex');
+const bcrypt = require('bcrypt-nodejs');
+
 
 
 
@@ -44,7 +46,7 @@ const dummyData = {
 }
 
 app.get('/', (req, res) => {
-    res.send('THE ROOT ENDPOINT IS WORKING');
+    res.send(dummyData.users);
 })
 
 app.post('/signin', (req, res) => {
@@ -56,12 +58,15 @@ app.post('/signin', (req, res) => {
     });
 
 app.post('/register', (req, res) => {
-    const { name, emal, password } = req.body;
+    const { name, email, password } = req.body;
+    bcrypt.hash(password, null, null, (errr, hash) => {
+        console.log(hash)
+    })
     dummyData.users.push(
         {
             id: '123',
             name: name,
-            email: emal,
+            email: email,
             entries: 0,
             password: password,
             joined: new Date()
@@ -86,11 +91,10 @@ app.put('/image/:id', (req, res) => {
     })
 })
 
+
 app.get('/profile/:id', (req, res) => {
     const { id } = req.params;
     let found = false;
-
-    console.log('the id received is : ', id);
     dummyData.users.map((user) => {
         if (user.id === id) {
             user.entries++;
@@ -99,7 +103,7 @@ app.get('/profile/:id', (req, res) => {
         }
     })
 
-    if (!found) {
+    if (found === false) {
         res.status(404).json("Record not found");
     }
 

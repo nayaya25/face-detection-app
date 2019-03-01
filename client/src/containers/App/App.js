@@ -6,20 +6,11 @@ import Rank from '../../components/Rank/Rank'
 import Logo from '../../components/Logo/Logo'
 import Particles from 'react-particles-js';
 import FaceRecognition from '../../components/FaceRecognition/FaceRecognition';
+import Signin from '../SignIn/Signin';
+import Signup from '../SignUp//Signup';
+
 
 var sightengine = require('sightengine')('1983977483', 'qq5asZMMo63qgQ7mu989');
-
-const particlesOptions = {
-  particles: {
-    number: {
-      value: 30,
-      density: {
-        enable: true,
-        value_area: 800
-        }
-    }
-  }
-}
 
 class App extends Component {
   constructor() {
@@ -28,7 +19,8 @@ class App extends Component {
       isSignedIn: false,
       input: "",
       rank: 0,
-      box: {}
+      box: {},
+      route: 'signin'
     }
   }
 
@@ -43,11 +35,19 @@ class App extends Component {
     sightengine.check(['face-attributes'])
       .set_url(this.state.imageUrl)
       .then(data => {
-        this.updateFaceData(this.getFaceLocation(data))
+        this.updateFaceData(this.getFaceLocation(data)) 
       })
       .catch(err => console.log(err));
   }
 
+  onRouteChange = (route) => {
+    if (route === 'signout')
+      this.setState({ isSignedIn: false })
+    else if (route === 'home')
+      this.setState({ isSignedIn: true })
+    
+  this.setState({ route: route })
+}
 
   getFaceLocation = respData => {
       const face = respData.faces[0];
@@ -66,15 +66,39 @@ class App extends Component {
     this.setState({ box })
   }
 
+  componentDidMount() {
+    fetch('http://localhost:3001')
+      .then(Response => console.log(Response.json()))
+      .catch(error => console.log(error))
+  }
+
   render() {
+    const { isSignedIn, imageUrl, box, route } = this.state;
     return (
       <div className="App">
-        <Particles className="particles" params={particlesOptions} />
-        <Navigation />
-        <Logo />
-        <Rank />
-        <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
-        <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl} />
+        <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}/>
+        {route === 'home' ? <>
+          <Logo />
+          <Rank />
+          <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
+          <FaceRecognition box={box} imageUrl={imageUrl} />
+        </> : (
+            route === 'signin' ? <Signin onRouteChange={this.onRouteChange} /> : <Signup />
+        )
+        }
+        <Particles
+          className="particless"
+          params={{
+            particles: {
+              number: {
+                value: 130,
+                density: {
+                  enable: true,
+                  value_area: 800
+                }
+              }
+            }
+          }} />
       </div>
     );
   }

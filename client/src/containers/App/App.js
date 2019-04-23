@@ -17,15 +17,22 @@ class App extends Component {
     super()
     this.state = {
       isSignedIn: false,
-      input: "",
+      inputUrl: "",
       rank: 0,
       box: {},
-      route: 'signin'
+      route: 'signup',
+      user: {
+        id: "",
+        name: "User",
+        email: "",
+        entries: 0,
+        joined: ""
+      }
     }
   }
 
   onInputChange = e => {
-    this.setState({ input: e.target.value })
+    this.setState({ inputUrl: e.target.value })
   }
 
   onButtonSubmit = () => {
@@ -35,6 +42,21 @@ class App extends Component {
     sightengine.check(['face-attributes'])
       .set_url(this.state.imageUrl)
       .then(data => {
+        if (data) {
+          fetch("http://localhost:3000/image", {
+            method: 'put',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: this.state.user.id
+            })
+          }).then(resp => resp.json())
+            .then(count => {
+              this.setState({...this.state, entries: count})
+            }).catch(
+              //resp.status(400).json("Failed to update count")
+              console.log('failed')
+            )
+        }
         this.updateFaceData(this.getFaceLocation(data)) 
       })
       .catch(err => console.log(err));
@@ -49,6 +71,17 @@ class App extends Component {
   this.setState({ route: route })
 }
 
+  loadUser = user => {
+    this.setState({
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        entries: user.entries,
+        joined: user.joined
+  }})
+}
+  
   getFaceLocation = respData => {
       const face = respData.faces[0];
       const image = document.getElementById('inputImage');
@@ -68,8 +101,9 @@ class App extends Component {
 
   componentDidMount() {
     fetch('http://localhost:3001')
-      .then(Response => console.log(Response.json()))
+      .then(response => console.log(response.json()))
       .catch(error => console.log(error))
+  
   }
 
   render() {
@@ -79,11 +113,11 @@ class App extends Component {
         <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}/>
         {route === 'home' ? <>
           <Logo />
-          <Rank />
+          <Rank name={this.state.user.name} entries={this.state.user.entries} />
           <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
           <FaceRecognition box={box} imageUrl={imageUrl} />
         </> : (
-            route === 'signin' ? <Signin onRouteChange={this.onRouteChange} /> : <Signup />
+            route === 'signin' ? <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} /> : <Signup loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
         )
         }
         <Particles

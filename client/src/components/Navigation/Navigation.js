@@ -17,7 +17,8 @@ class Navigation extends React.Component {
                 {
                     isSignedIn ?
                         <nav className="nav">
-                        <p onClick={() => onRouteChange('signin')} className="f3 link dim black underline pa3 pointer">Sign out</p>
+                            <p onClick={() => onRouteChange('signin')} className="f3 link dim black underline pa3 pointer">Sign out</p>
+                            <p onClick={() => onRouteChange('signup')} className="f3 link dim black underline pa3 pointer">Sign up</p>
                         </nav> : 
                         <nav className="nav"> 
                             <p onClick={() => onRouteChange('signup')} className="f3 link dim black underline pa3 pointer">Sign up</p>

@@ -5,7 +5,7 @@ const cors = require('cors');
 const Knex = require('knex');
 const bcrypt = require('bcrypt-nodejs');
 
-
+const controllers = require('./controllers/controllers')
 
 
 const app = express();
@@ -15,99 +15,27 @@ app.use(morgan('combined'));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
-
-const dummyData = {
-    users: [
-        {
-            id: 321,
-            name: 'nayaya ibrahim',
-            email: 'nayaya@gmail.com',
-            password: 'nayaya',
-            entries: 0,
-            joined: new Date()
-        },
-        {
-            id: 132,
-            name: 'yusuf bashir',
-            email: 'ybn@gmail.com',
-            password: 'ybn',
-            entries: 0,
-            joined: new Date()
-        },
-        {
-            id: 213,
-            name: 'aliyu bashir',
-            email: 'ali@gmail.com',
-            password: 'ali',
-            entries: 0,
-            joined: new Date()
-        }
-    ]
-}
+const db = Knex({
+    client: 'pg',
+    connection: {
+        host: '127.0.0.1',
+        user: 'postgres',
+        password: '',
+        database: 'smart-brain'
+    }
+})
 
 app.get('/', (req, res) => {
-    res.send(dummyData.users);
+    res.json({"Home": "home"});
 })
 
-app.post('/signin', (req, res) => {
-    if (req.body.email === dummyData.users[0].email && req.body.password === dummyData.users[0].password) {
-        res.send('Logged in Successfully');
-    } else {
-        res.status(400).json("Invalid Credentials");
-    }
-    });
+app.post('/signin', (req, res) => { controllers.handleSignIn(req, res, db, bcrypt) });
 
-app.post('/register', (req, res) => {
-    const { name, email, password } = req.body;
-    bcrypt.hash(password, null, null, (errr, hash) => {
-        console.log(hash)
-    })
-    dummyData.users.push(
-        {
-            id: '123',
-            name: name,
-            email: email,
-            entries: 0,
-            password: password,
-            joined: new Date()
-        }
-    )
+app.post('/signup', (req, res) => { controllers.handleSignUp(req, res, db, bcrypt) })
 
-    res.send(dummyData.users)
-})
+app.put('/image', (req, res) => { controllers.handleImageCount(req, res, db) }) 
 
-app.put('/image/:id', (req, res) => {
-    const { id } = req.params;
-    let found = false;
-    dummyData.users.forEach(user => {
-        if (user.id === id) {
-            user.entries++;
-            res.json(user.entries);
-            found = true;
-        }
-        if (!found) {
-            res.status(404).json("No entries for this user")
-        }
-    })
-})
-
-
-app.get('/profile/:id', (req, res) => {
-    const { id } = req.params;
-    let found = false;
-    dummyData.users.map((user) => {
-        if (user.id === id) {
-            user.entries++;
-            found = true;
-            return res.send("The entries from the array is :", user.entries)
-        }
-    })
-
-    if (found === false) {
-        res.status(404).json("Record not found");
-    }
-
-})
+app.get('/profile/:id', (req, res) => { controllers.handleProfile(req, res, db) })
 
 
 const PORT = process.env.PORT || 3001;

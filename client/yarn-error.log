@@ -1,26 +1,24 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\Ibraheem_Nayaya\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add sightengine
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js start
 
 PATH: 
-  C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Git\cmd;C:\Program Files\PuTTY\;C:\Program Files\nodejs\;C:\Users\Ibraheem_Nayaya\AppData\Local\Programs\Python\Python37\Scripts;C:\Users\Ibraheem_Nayaya\AppData\Local\Yarn\bin;C:\Users\Ibraheem_Nayaya\AppData\Roaming\npm;C:\Users\Ibraheem_Nayaya\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Ibraheem_Nayaya\AppData\Local\Programs\Python\Python37;C:\Program Files\Heroku\bin
+  C:\Program Files\PostgreSQL\10\bin;C:\Program Files (x86)\Yarn\bin;C:\Program Files\nodejs;C:\Users\Ibraheem_Nayaya\AppData\Roaming\npm;C:\Program Files\Git\bin;C:\Program Files\PostgreSQL\10\bin;C:\Program Files (x86)\Yarn\bin;C:\Program Files\nodejs;C:\Users\Ibraheem_Nayaya\AppData\Roaming\npm;C:\Program Files\Git\bin
 
 Yarn version: 
-  1.6.0
+  1.5.1
 
 Node version: 
-  8.12.0
+  10.15.1
 
 Platform: 
   win32 x64
-
-Trace: 
-  Error: EPERM: operation not permitted, scandir 'C:\Users\Ibraheem_Nayaya\Desktop\MyProjects\face-detection-app\client\node_modules\@types'
 
 npm manifest: 
   {
     "name": "client",
     "version": "0.1.0",
     "private": true,
+    "proxy": "http://localhost:3001/",
     "dependencies": {
       "bootstrap": "^4.3.1",
       "node-sass": "^4.11.0",
@@ -32,6 +30,7 @@ npm manifest:
       "react-scripts": "2.1.3",
       "react-tilt": "^0.1.4",
       "reactstrap": "^7.1.0",
+      "sightengine": "^1.3.1",
       "tachyons": "^4.11.1"
     },
     "scripts": {
@@ -9335,3 +9334,18 @@ Lockfile:
       which-module "^1.0.0"
       y18n "^3.2.1"
       yargs-parser "^5.0.0"
+
+Trace: 
+  Error: Command failed.
+  Exit code: 3221225786
+  Command: C:\Windows\system32\cmd.exe
+  Arguments: /d /s /c react-scripts start
+  Directory: C:\Users\Ibraheem_Nayaya\Desktop\MyProjects\face-detection-app\client
+  Output:
+  
+      at ProcessTermError.MessageError (C:\Program Files (x86)\Yarn\lib\cli.js:186:110)
+      at new ProcessTermError (C:\Program Files (x86)\Yarn\lib\cli.js:226:113)
+      at ChildProcess.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:30281:17)
+      at ChildProcess.emit (events.js:189:13)
+      at maybeClose (internal/child_process.js:970:16)
+      at Process.ChildProcess._handle.onexit (internal/child_process.js:259:5)

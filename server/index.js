@@ -25,6 +25,7 @@ const db = Knex({
         database: 'smart-brain'
     }
 })
+
 app.get('/cool', (req, res) => res.send(cool()))
 
 app.get('/', (req, res) => {

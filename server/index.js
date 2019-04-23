@@ -1,4 +1,5 @@
 const express = require('express');
+const cool = require('cool-ascii-faces')
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require('cors');
@@ -18,12 +19,13 @@ app.use(bodyParser.urlencoded({extended: true}))
 const db = Knex({
     client: 'pg',
     connection: {
-        host: '127.0.0.1',
+        host: 'postgresql-parallel-45996',
         user: 'postgres',
         password: '',
         database: 'smart-brain'
     }
 })
+app.get('/cool', (req, res) => res.send(cool()))
 
 app.get('/', (req, res) => {
     res.json({"Home": "home"});
